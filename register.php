@@ -1,71 +1,81 @@
 <?php
 
+
 require_once("config.php");
 
-$username_err = $password_err = $empid_err = $email_err = "";
+
+$username_err = $password_err = $email_err = "";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    // Check if username is empty 
+    // Check if any field is empty 
 
-    if (empty(trim($_POST["password"])) || empty(trim($_POST["username"])) || empty(trim($_POST["empid"])) || empty($_POST['cpassword']) || empty(trim($_POST["email"])) || empty(trim($_POST["dept"]))) {
-
+    if (empty(trim($_POST["password"])) || empty(trim($_POST["username"]))  || empty($_POST['cpassword']) || empty(trim($_POST["email"])) || empty(trim($_POST["dept"]))) {
+ 
         die('Please fill all required fields!');
     }
 
+
     $username = trim($_POST["username"]);
-    $sql = "Select * from register where username='$username'";
 
-    $result = mysqli_query($con, $sql);
+    $sql =  mysqli_query($con," SELECT username FROM register WHERE username = '" .$username ."'" );
 
-    $num = mysqli_num_rows($result);
-
-    if ($num == 0) {
+    // check for password 
+    if (mysqli_num_rows($sql) == 0) {
 
         if (strlen(trim($_POST["password"])) < 5) {
             $password_err = "Password cannot be less than 5 characters ";
+            echo "<script> alert('$password_err') </script>" ;  
         }
         if (trim($_POST["password"]) != trim($_POST["cpassword"])) {
             $password_err = "Password do not match ";
+            echo "<script> alert('$password_err ') </script>" ;
         }
-        if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+        // check for email
+        if(!filter_var($_POST["email"],FILTER_VALIDATE_EMAIL)) {
             $email_err = "Please Enter Valid Email ID";
-            }
-        if (!is_numeric(trim($_POST["empid"]))) {
-            $empid_err = "Invalid ID";
-        } else {
-            $password = trim($_POST["password"]);
-            $empid = trim($_POST["empid"]);
-            $email_id = trim($_POST["email"]);
-            $dept = trim($_POST["dept"]);
+            echo "<script> alert('$email_err ') </script>" ; 
         }
-    } else if ($num > 0) {
+       
+    } else  {
         $username_err = "Username not available";
+        echo "<script> alert('$username_err') </script>" ;
     }
+
+    $empid = $_POST["email"];
+    $password = $_POST["password"];
+    $email_id = $_POST["email"] ;
+    $dept = $_POST["dept"] ;
+    $usertype = $_POST["usertype"] ;
 
     //  if there were no errors, then insert into database
     if (empty($username_err) && empty($password_err) &&  empty($empid_err) && empty($email_err)) {
+
         
-        $sql = "INSERT INTO register(empid, username, email, password, dept, created) VALUES(?, ?, ?, ?, ?, current_timestamp()) ";
+        $sql = " INSERT INTO register ( `username`, `email`, `password`, `dept`,`usertype`, `created`) VALUES(?, ?, ?, ?, ?, current_timestamp()) ";
         $stmt = mysqli_prepare($con, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password, $param_email, $param_empid, $param_dept);
+            mysqli_stmt_bind_param($stmt, "sssss", $param_username, $param_email, $param_password, $param_dept, $usertype);
 
             // Set these parameters
             $param_username = $username;
-            $param_password = password_hash($password, PASSWORD_DEFAULT);
-            $param_empid = $empid;
+            $param_password = $password;
             $param_email = $email_id;
             $param_dept = $dept;
+            $param_usertype = $usertype ;
 
             //Try to execute
             if (mysqli_stmt_execute(($stmt))) {
 
+                echo "<script> alert('Sign Up Successful !!');</script>" ;
                 header("location: login.php");
             } else {
-                echo "<script>alert 'Something went wrong..... Cannot Redirect'</script>";
+                echo "<script> alert('Something went wrong..... Cannot Redirect') ;</script>";
             }
+        }else{
+            echo " <script> alert('Can't sign up with these details') ;</script> ";
         }
+
         mysqli_stmt_close($stmt);
     }
 }
@@ -91,20 +101,30 @@ mysqli_close($con);
             </marquee>
             <h3 id="head">Registration Form For Employees</h3>
         </header>
-        <form id="sform" action="register.php" method="post" target="_blank">
+        <form id="sform" action="register.php" method="post">
 
-            <label for="empid">Employee ID:</label>
-            <input name="empid" type="text" id="empid"><br>
+           
+            
             <label for="username">Username:</label>
-            <input name="username" type="text" id="uname"><br>
+            <input name="username" type="text" id="uname" required><br>
+
             <label for="email">Email ID:</label>
-            <input type="email" name="email" id="email"><br>
+            <input type="email" name="email" id="email" required><br>
+
             <label for="password">Password:</label>
-            <input type="password" name="password" id="passw"><br>
+            <input type="password" name="password" id="passw" required><br>
+
             <label for="cpassw">Confirm Password:</label>
-            <input type="password" name="cpassword" id="cpassw"><br>
+            <input type="password" name="cpassword" id="cpassw" required><br>
+
+            <label for="usertype">User Type:</label>
+            <select name="usertype" id="usertype" autofocus="true" required><br>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select><br>
+
             <label for="dept">Department:</label>
-            <select name="dept" id="dept" autofocus="">
+            <select name="dept" id="dept" autofocus="true" required>
                 <option value="Sales">Sales</option>
                 <option value="Marketing">Marketing</option>
                 <option value="Networking">Networking</option>
@@ -112,9 +132,10 @@ mysqli_close($con);
                 <option value="Customer Support">Customer Support</option>
                 <option value="Admin">Admin</option>
             </select><br>
-            <br><br>
-            <a href="javascript:$('form').submit();" class="sub">Submit</a>
-            <a href="javascript:$('form').reset();" class="sub">Reset</a>
+            <br>
+
+            <button type="submit" class="sub">Submit</button>
+            <button type="reset" value="reset" class="sub">Reset</button>
         </form>
         <footer>
             <marquee behavior="scroll" direction="left" loop="">

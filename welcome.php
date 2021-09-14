@@ -1,12 +1,3 @@
-<?php
-
-session_start();
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] != true) {
-
-    header('location: login.php');
-}
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,26 +22,28 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] != true) {
         <nav>
             <div class="nav-bar-menu selected" id="home" onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
             <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Lodge a Complaint</div>
-            <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div>
+            <!-- <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div> -->
             <div class="nav-bar-menu" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">Feedback</div>
-            <div class="nav-bar-menu" id="profile">Profile</div>
-            <div class="nav-bar-menu" id="name"><span class="material-icons-outlined">
-                    account_circle
-                </span><?php echo "Welcome " . $_SESSION["username"] ?></div>
-
         </nav>
         <article>
             <img src="./partials/tcillogo.png" alt="logo" id="logo" />
             <div class="manual">
                 <h4>Welcome to the E-complaint portal of TCIL.</h4><br>
+                <br>
                 Due to COVID-19 pandemic and the ongoing restrictions which come as a part and parcel of the pandemic, we have devised this platform to ensure smooth functioning of the organisation. All Employees are requested to use this forum to address their greivances at the earliest. Follow the steps mentioned below in order to navigate through the website:
                 <br><br>
                 <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <li> Navigate to <a class="a" href="./login.php" >Lodge a Complaint</a> Section.</li>
+                    <br>
+                    <li> If you are an existing user, then straight away LogIn to lodge a complaint. </li>
+                    <br>
+                    <li> New Users should <a class="a" href="./register.php">Register</a> in order to enter their complaints.</li>
+                    <br>
+                    <li> Use the <a href="./feedback.php" class="a">Feedback</a> tab to express your reviews about our system.<br>
+                     We are open to any viable changes for consumer satisfaction.</li>
+                     <br>
+                    <li> The <a href="./login.php" class="a" >Check status</a> tab helps you check the status of your complaint.<br>
+                    It appears once you Login to the system</li>
 
                 </ul>
 

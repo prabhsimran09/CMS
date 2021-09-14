@@ -1,12 +1,24 @@
-<!DOCTYPE html>
+<?php
+
+    include "config.php";
+    session_start();
+    $empid = $_SESSION["empid"];
+    $cmpid = $_SESSION["cmpid"];
+    $status = $_SESSION["status"] ;
+    $dt = $_SESSION["dt"];
+    $item = $_SESSION["item"];
+mysqli_close($con);
+
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <title>PROFILE CREDENTIALS</title>
+    <title>Table</title>
 </head>
 <body>
     <div class="main-container">
@@ -15,43 +27,33 @@
                 <pre> Telecommunications Consultants India Limited.                                  Telecommunications Consultants India Limited.                                  Telecommunications Consultants India Limited.</pre>
             </marquee>
             <h2> COMPLAINT MANAGEMENT SYSTEM</h2>
+            <a class="log" href="logout.php">Log Out</a>
         </header>
         <nav>
-            <div class="nav-bar-menu " id="home" onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
-            <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Lodge a Complaint</div>
-            <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div>
+            <div class="nav-bar-menu" id="home" onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
+            <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Profile</div>
+            <div class="nav-bar-menu selected" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div>
             <div class="nav-bar-menu" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">Feedback</div>
-            <div class="nav-bar-menu selected" id="profile">Profile</div>
-            <div class="nav-bar-menu" id="name"><span class="material-icons-outlined">
-                    account_circle
-                </span> </div>
-
         </nav>
         <article>
             <img src="./partials/tcillogo.png" alt="logo" id="logo" />
             <div class="manual">
-                <div class="details">
-                    <span class="material-icons-outlined">
-                        portrait
-                        </span>>
-                    username
-                    email id
-                    complaints
-
-                </div>
-                <div class="history">
-                    <table>
-                        <tr>
-                            <th>S.NO</th>
-                            <th>Complaint No.</th>
-                            <th>Date </th>
-                        </tr>
-                        <tr></tr>
-                        <tr></tr>
-                    </table>
-                </div>
-            
-
+                <table>
+                    <tr>
+                        <th>Complaint ID</th
+                        ><th>Employee ID</th>
+                        <th>Item</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td><?php echo $cmpid ; ?></td>
+                        <td><?php echo $empid ; ?></td>
+                        <td><?php echo $item ; ?></td>
+                        <td><?php echo $status ; ?></td>
+                        <td><?php echo $dt ; ?></td>
+                    </tr>
+                 </table>
             </div>
             <div class="general">
                 <h3>ABOUT</h3>

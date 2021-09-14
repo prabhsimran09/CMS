@@ -2,103 +2,57 @@
 
 require_once("config.php");
 
-$username = $password = $empid = $email_id = $dept = "";
-$username_err = $password_err = $empid_err = $email_id_err = "";
+$email = $contact = $message = "";
+$email_err = $contact_err  = $message_err = "";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     // Check if username is empty 
 
-    if (empty(trim($_POST["email_id"]))) {
-        $username_err = "Email ID cannot be blank.";
-    } else {
+    if(empty(trim($_POST["message"]))){
 
-    $sql = "SELECT id FROM register WHERE  email_id = ?";
-    $stmt = mysqli_prepare($con, $sql);
-    if ($stmt) {
+        $message_err = "text Area can't be empty ";
+        echo "<script> alert('$message_err');</script>" ;
+    }
 
-            mysqli_stmt_bind_param($stmt, "s", $param_email_id);
-            // Set value of $param_username
-            $param_email_id = trim($_POST["email_id"]);
+    // check for validation
+    if(!filter_var($_POST["email"],FILTER_VALIDATE_EMAIL)) {
+        $email_err = "Please Enter Valid Email ID";
+        echo "<script> alert('$email_err '); </script>" ; 
+    }
 
-            // Try to execute the Statement
-            if (mysqli_stmt_execute($stmt)) {
+    $email = $_POST["email"] ;
+    $contact = $_POST["contact"];
+    $message = $_POST["message"];
 
-                mysqli_stmt_store_result($stmt);
-                if (mysqli_stmt_num_rows($stmt) == 1) {
-                    $username_err = "This username is already taken";
-                } else {
-                    $username = trim($_POST["uname"]);
-                }
+    if (empty($email_err) && empty($contact_err) &&  empty($message_err)){
+
+          
+        $sql = " INSERT INTO feedback ( `email`, `contact`, `message`, `dt`) VALUES(?, ?, ?,  current_timestamp()) ";
+        $stmt = mysqli_prepare($con, $sql);
+
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "sss", $param_email, $param_contact, $param_message);
+
+            // Set these parameters
+            $param_contact = $contact;
+            $param_message = $message;
+            $param_email = $email;
+
+            //Try to execute
+            if (mysqli_stmt_execute(($stmt))) {
+
+                echo "<script> alert('Feedback recorded !!');</script>" ;
+                header("location: welcome.php");
             } else {
-                echo ("Something Went Wrong !!");
+                echo "<script> alert('Something went wrong..... Cannot Redirect') ;</script>";
             }
+        }else{
+            echo " <script> alert('Can't sign up with these details'); </script> ";
         }
-    }
-    mysqli_stmt_close($stmt);
 
-    // Check for password 
-    if (empty(trim($_POST["password"]))) {
-        $password_err = "Password cannot be empty ";
-    } else if (strlen(trim($_POST["password"])) < 5) {
-        $password_err = "Password cannot be less than 5 characters ";
-    } else {
-        $password = trim($_POST["password"]);
+        mysqli_stmt_close($stmt);
     }
-
-    // Check for confirm password 
-    if (trim($_POST["cpassword"]) != trim($_POST["password"])) {
-        $password_err = "Password do not match ";
-    }
-
-    // Check for email id
-    if (empty(trim($_POST["email"]))) {
-        $email_err = "Email cannot be empty ";
-    }
-    else if (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
-      $email_err = "Invalid email format";
-    }
-    else{
-        $email_id = trim($_POST["email"]);
-    }
-
-    // Check for employee id
-    if (empty(trim($_POST["empid"]))) {
-        $username_err = "ID cannot be blank.";
-    }
-    else if (!is_numeric(trim($_POST["empid"]))) {
-        $empid_err = "Invalid ID";
-    }
-    else{
-        $empid = trim($_POST["empid"]);
-    }
-
-    $dept = trim($_POST["dept"]);
-
-//  if there were no errors, then insert into database
-if (empty($username_err) && empty($password_err) &&  empty($confirmpass_err)) {
-    $sql = "INSERT INTO register(empid, uname, email, password, dept, created) VALUES(?, ?, ?, ?, ?, current_timestamp()) ";
-    $stmt = mysqli_prepare($con, $sql);
-    if ($stmt) {
-        mysqli_stmt_bind_param($stnt, "ss", $param_username, $param_password, $param_email, $param_empid, $param_dept);
-
-        // Set these parameters
-        $param_username = $username;
-        $param_password = password_hash($password, PASSWORD_DEFAULT);
-        $param_empid = $empid ;
-        $param_email = $email_id ;
-        $param_dept = $dept ;
-
-        //Try to execute
-        if (mysqli_stmt_execute(($stmt))) {
-
-            header("location: login.php");
-        } else {
-            echo ("Something went wrong..... Cannot Redirect");
-        }
-    }
-    mysqli_stmt_close($stmt);
-}
 }
 mysqli_close($con);
 ?>
@@ -126,35 +80,29 @@ mysqli_close($con);
                 onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
             <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Lodge a
                 Complaint</div>
-            <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">
-                Check Status</div>
             <div class="nav-bar-menu selected" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">
                 Feedback</div>
-            <div class="nav-bar-menu">Admin</div>
         </nav>
         <article>
             <img src="./partials/tcillogo.png" alt="logo" id="logo" />
             <div class="manual">
                 <h3> Feedback Form</h3>
-                <form class="feedback-form">
+                <form class="feedback-form" method="POST">
                     <label for="email">Email ID: </label>
                     <br>
-                    <input type="email" name="email" id="email">
+                    <input type="email" name="email" id="email" required>
                     <br>
-                    <label for="empid">Employee ID: </label>
+                    <label for="contact">Contact Number: </label>
                     <br>
-                    <input name="empid" type="text" id="empid">
-                    <br>
-                    <label for="complaint-no">Complaint Number: </label>
-                    <br>
-                    <input type="text" name="complaint-no" id="comlaint-no">
+                    <input name="contact" type="tel" id="contact" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                    <small>Format: 123-456-7810</small><br>
                     <br>
                     <label for="message"> Message/Comments: </label>
                     <br>
-                    <textarea id="message" name="message" rows="4" cols="50" autofocus>Write here...</textarea>
+                    <textarea id="message" name="message" rows="4" cols="50" autofocus required>Write here...</textarea>
                     <br>
-                    <a href="javascript:$('form').submit();" class="sub">Submit</a>
-                    <a href="javascript:$('form').reset();" class="sub">Reset</a>
+                    <button type="submit" class="sub">Submit</button>
+                    <button type="reset" class="sub">Reset</button>
 
                 </form>
             </div>
