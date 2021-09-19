@@ -42,6 +42,7 @@
 
             // Set these parameters
             $param_eid = $eid;
+            $_SESSION["empid"] = $eid ;
             $param_uname = $uname;
             $param_iid = $item;
 
@@ -90,6 +91,7 @@ mysqli_close($con);
             <div class="nav-bar-menu selected" id="profile" >Profile</div>
             <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div>
             <div class="nav-bar-menu" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">Feedback</div>
+            <div class="nav-bar-menu" id="history" onclick="location.href = `http://localhost/php/CMS/history.php` ">All Complaints</div>
             
             <div class="uname"><span class="material-icons-outlined">
                     account_circle
@@ -151,8 +153,6 @@ mysqli_close($con);
             </marquee>
         </footer>
     </div>
-
-    <script src="script.js"></script>
     
 </body>
 </html>

@@ -70,7 +70,6 @@ mysqli_close($con);
         </footer>
     </div>
 
-    <script src="script.js"></script>
     
 </body>
 </html>

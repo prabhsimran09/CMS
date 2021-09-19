@@ -1,4 +1,14 @@
-<!DOCTYPE html>
+<?php
+if(isset($_SESSION["usertype"])){
+
+    if($_SESSION["username"] == "admin"){
+        header("location: complaints.php");
+    }else{
+        header("location: profile.php");
+    }
+}
+?>
+    <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,9 +30,8 @@
             <h2> COMPLAINT MANAGEMENT SYSTEM</h2>
         </header>
         <nav>
-            <div class="nav-bar-menu selected" id="home" onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
-            <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Lodge a Complaint</div>
-            <!-- <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div> -->
+            <div class="nav-bar-menu selected" id="home" >Home</div>
+            <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Log In</div>
             <div class="nav-bar-menu" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">Feedback</div>
         </nav>
         <article>
@@ -62,8 +71,6 @@
             </marquee>
         </footer>
     </div>
-
-    <script src="script.js"></script>
 </body>
 
 </html>

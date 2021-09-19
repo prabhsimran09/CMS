@@ -8,7 +8,7 @@ require_once "config.php" ;
 ///check if user has already logged in
 if (isset($_SESSION["username"])) {
 
-    header("location: profile.html");
+    header("location: profile.php");
     $_SESSION["logged_in"] = true ;
     exit;
 } 
@@ -37,15 +37,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $username = $_POST["username"];
         $password = $_POST["pass"];
         
-        $sql = mysqli_query($con,"SELECT username, password, empid FROM register WHERE username ='".$username."' AND password = '" .$password ."'");
+        $sql = mysqli_query($con,"SELECT username, password, empid, usertype, email FROM register WHERE username ='".$username."' AND password = '" .$password ."'");
         $row = mysqli_fetch_row($sql);
         if(mysqli_num_rows($sql) > 0 )
         { 
             $_SESSION["logged_in"] = true; 
             $_SESSION['username'] = $username;
             $_SESSION["empid"] = $row[2] ;
+            $_SESSION["usertype"] = $row[3] ;
+            if($row[3] == "admin"){
+                $_SESSION["email"] = $row[4];
+                header("location: complaints.php");
+
+            }else{
+                header("location: profile.php");
+            }
             
-            header("location: profile.php");
+         
         }else{
             echo "<script> alert('Username does not exist');</script>";
         }
@@ -79,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </header>
         <nav>
             <div class="nav-bar-menu" id="home" onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
-            <div class="nav-bar-menu selected" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Lodge a Complaint</div>
+            <div class="nav-bar-menu selected" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Log In</div>
             <!-- <div class="nav-bar-menu" id="status" onclick=" location.href = `http://localhost/php/CMS/status.php` ">Check Status</div> -->
             <div class="nav-bar-menu" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">Feedback</div>
             
@@ -122,7 +130,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <pre>Helpline: XXXXXXXX92   ;  Email: this@this.com                                    Helpline: XXXXXXXX92   ;  Email: this@this.com                                    Helpline: XXXXXXXX92   ;  Email: this@this.com</pre>
             </marquee>
         </footer>
-        <script src="script.js"></script>
+
 </body>
 
 </html>

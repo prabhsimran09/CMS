@@ -78,8 +78,7 @@ mysqli_close($con);
         <nav>
             <div class="nav-bar-menu" id="home"
                 onclick="location.href = `http://localhost/php/CMS/welcome.php`">Home</div>
-            <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Lodge a
-                Complaint</div>
+            <div class="nav-bar-menu" id="login" onclick=" location.href = `http://localhost/php/CMS/login.php`">Log In</div>
             <div class="nav-bar-menu selected" id="feedback" onclick="location.href = `http://localhost/php/CMS/feedback.php` ">
                 Feedback</div>
         </nav>
@@ -124,7 +123,6 @@ mysqli_close($con);
             </marquee>
         </footer>
     </div>
-    <script src="script.js"></script>
 </body>
 
 </html>

@@ -4,10 +4,10 @@
     border-radius: 0.5em;
 }
 .main-container,.fcontainer{
-    padding: 10px 10px 10px 10px ;
     height: 100vh;
     width: 100vw;
     background-color: rgba(255, 255, 255, 0.205);
+    padding: 2px;
 }
 header{
     height: 15%;
@@ -36,6 +36,7 @@ nav{
     color: blue;
     font-family: monospace;
     font-size: 16px;
+    text-align: center;
 }
 .nav-bar-menu:hover{
     background-color:rgba(12, 11, 11, 0.267);
@@ -59,6 +60,7 @@ nav{
   margin-right: 0.8%;
   padding: 20px 10px 10px 20px ;
   font-family:monospace;
+  overflow-y: scroll;
 } 
 .general{
   height:100%;
@@ -130,7 +132,7 @@ h4, h3{
 .icon{
     margin: 10px;
 }
-.bt, .sub {
+.bt, .sub, .ssub{
     margin-top: 10px;
     margin-right: 20px;
     height: 35px;
@@ -144,13 +146,13 @@ h4, h3{
     border:2px dashed rgba(84, 94, 185, 0.952) ;
     color: rgba(84, 94, 185, 0.952) ;
 }
-.sub{
+.sub,.ssub{
     color: crimson;
     border:2px dashed crimson;
     margin-top: 0;
     
 }
-.sub:hover, .bt:hover{
+.sub:hover, .bt:hover, .ssub:hover{
     background-color:rgba(202, 196, 196, 0.753);
     cursor: pointer;
 }
@@ -219,7 +221,7 @@ label{
 }
 .uname{
 
-    margin-left: 60em  ;
+    margin-left: 52em  ;
     width: 150px;
     display: flex;
     flex-direction: row;
@@ -279,11 +281,14 @@ a:link, a:visited{
     padding-right: 10px;
 } 
 table{
-    margin-top: 100px;
+    margin-top: 90px;
+    width: 90%;
     font-size: large;
-    color:white ;
+    overflow:scroll ;
 }
-
+th{
+    border: 1px solid rgb(4, 4, 163) ;;
+}
 th, td{
     border-right: 0px;
     margin: 0px;
@@ -295,18 +300,41 @@ th, td{
 }
 td{
     text-align: center;
+    width: 3em;
+}
+#dd{
+    width: 10em;
+    padding: 1px;
+    height: 4em ;
+}
+#st{
+    height: 25px;
+    width: 50px;
+}
+#st:hover,#ed:hover {
+    cursor: pointer;
 }
 td:hover {
     background-color:rgba(0, 0, 0, 0.377);
     cursor: pointer;
 }
-tr:nth-child(odd) {background-color: rgb(31, 14, 182);}
+tr:nth-child(odd) {background-color: rgb(241, 241, 247); color:rgb(4, 4, 163) ;
+}
 
-tr:nth-child(even) { background-color: rgba(0, 0, 255, 0.459);}
+tr:nth-child(even) { background-color: rgba(0, 0, 255, 0.671);
+    color:white ;}
 
 #complaint-no{
 
     height: 2em;
 }
+.edit{
+    margin-left: 5px ;
+    height: 2em;
+    width: 4em;
+    color: red;
+    border: 1px dashed red ;
+}
+
 
 
