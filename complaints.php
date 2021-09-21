@@ -1,19 +1,9 @@
 <?php
 
-require_once "config.php";
 session_start();
 $username = $_SESSION["username"];
 $empid = $_SESSION["empid"] ;
-
-    
-    $sql = mysqli_query($con, "SELECT * FROM complaints order by complaint_id");
-    
-    if(mysqli_num_rows($sql) == 0){
-
-        echo "<script> alert('No Complaint found');</script>";
-
-    }  
-
+ 
 
 ?>
 <!DOCTYPE html>
@@ -50,7 +40,46 @@ $empid = $_SESSION["empid"] ;
         <article>
             <img src="./partials/tcillogo.png" alt="logo" id="logo" />
             <div class="manual">
-                <table class="t1">
+            <form class="admin" method="POST">
+
+               <label for="ustatus" class="lab">Select Status:</label>
+               <select name="ustatus" id="ust" required>
+                  <option value="resolved">Resolved</option>
+                  <option value="processing">Processing</option>
+                  <option value="new">New</option>
+                </select>
+               
+               <label class="lab">Select Date:</label>
+
+               <label for="dt1" class="lab" >FROM:</label>
+               <input type="date" name="dt1" id="d1" required>
+
+               <label for="dt2" class="lab">TO:</label>
+               <input type="date" name="dt2" id="d2" required>
+
+               <button type="submit" class="asub" id="go">Go</button>
+               <button type="reset" class="asub" id="res">Reset</button>
+
+            </form>
+            <?php 
+                
+                require_once "config.php";
+                if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+                    $user_status = $_POST["ustatus"];
+                    $d1 = $_POST["dt1"];
+                    $d2 = $_POST["dt2"];
+                
+                    $sql = mysqli_query($con, " SELECT * FROM complaints where status = '".$user_status."' AND date >= '".$d1."' AND date <= '".$d2."'");
+                   
+                    if(mysqli_num_rows($sql) == 0){
+                
+                        echo "<script> alert('No Complaint found');</script>";
+                
+                    } 
+            
+            ?>
+                <table class="t1" id="t1">
                     <tr>
                         <th>Complaint ID</th>
                         <th>Employee ID</th>
@@ -60,7 +89,7 @@ $empid = $_SESSION["empid"] ;
                         <th>Date</th>
                     </tr>
                     <?php 
-                        $item =  $initial_status = "";
+                        $item = "";
                         while($row = mysqli_fetch_row($sql)) {
 
                             switch($row[3]){
@@ -105,7 +134,6 @@ $empid = $_SESSION["empid"] ;
                          <td><?php echo $row[2] ; ?></td>
                          <td><?php echo $item ; ?></td>
                          <td class="dd"><?php
-                           $initial_status = $row[5] ;
                            if($row[5] == "resolved") echo $row[5] ;
                            else{
                                echo "<select name='status' id='st'>  <option value='$row[5]' selected disabled hidden>$row[5]</option><option value='new'>New</option><option value='processing'>Processing</option><option value='resolved'>Resolved</option> </select>";
@@ -113,15 +141,15 @@ $empid = $_SESSION["empid"] ;
                          ?> </td>
                          <td><?php echo $row[4] ; ?></td>
                     </tr>
-                  
                     <?php
-                        }
+                            } 
                     ?>
                 </table>
                 <div style="margin-left: 400px; margin-top:20px;">
                    <button type="submit" class="ssub">Save</button>
                    <button type="reset" class="sub">Reset</button>
                 </div>
+                <?php }?>
 
             </div>
             <div class="general">
@@ -137,11 +165,9 @@ $empid = $_SESSION["empid"] ;
                 <pre>Helpline: XXXXXXXX92   ;  Email: this@this.com                                    Helpline: XXXXXXXX92   ;  Email: this@this.com                                    Helpline: XXXXXXXX92   ;  Email: this@this.com</pre>
             </marquee>
         </footer>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="./script.js"></script>
     </div>
     <?php 
-
+    
        if(isset($_COOKIE["c_id"])){
 
           $c_id = $_COOKIE["c_id"];
@@ -149,10 +175,22 @@ $empid = $_SESSION["empid"] ;
           $uname = $_COOKIE["uname"];
           $item = $_COOKIE["item"];
           $final_status = $_COOKIE["status"];
-          $date = $_COOKIE["date"]; 
+          $date = $_COOKIE["date"];
+          $initial_status = "" ;
+        //   if($final_status== "Processing" || $final_status == "processing")
+        //     { $initial_status = "new" ;}
+    
+        //   else if($final_status == "Resolved" || $final_status == "resolved")
+        //    {  $initial_status = "processing";}
+
+          $result = mysqli_query( $con, "SELECT * FROM complaints where complaint_id = '".$c_id."'");
+          if(mysqli_num_rows($result)!= 0){
+            while($row = mysqli_fetch_row($result)){
+                $initial_status = $row[5];
+            }
+          
 
           $sql = mysqli_query($con, "UPDATE complaints SET status = '".$final_status."' , date = current_timestamp() where complaint_id = '".$c_id."'");
-
           if(!$sql){
               echo "<script> alert('Error: Changes not saved');</script>";
             }
@@ -161,6 +199,7 @@ $empid = $_SESSION["empid"] ;
              $email = $_SESSION['email'] ;
              $log = "INSERT INTO logs (`e_id`, `status_from`, `status_to`, `status_by`, `date`) VALUES ( ?, ?, ?, ? ,current_timestamp()) ";
              $stmt = mysqli_prepare($con, $log);
+             echo "<script> alert('Changes Saved Successfully !!');</script>";
   
               if ($stmt) {
                  mysqli_stmt_bind_param($stmt, "ssss", $param_eid, $param_sf, $param_st, $sb);
@@ -175,17 +214,17 @@ $empid = $_SESSION["empid"] ;
                  if (!mysqli_stmt_execute(($stmt))) {
                      echo "<script> alert('Something went wrong..... Try again') ;</script>";
                      exit;
-                 }
-                //  else{
-                //     echo "<script> alert('Changes Saved Successfully !!');</script>";
-                //  }
+                    }
                 }
             }
+        }
+        
        
          mysqli_close($con) ;
         }
  
     ?>
-    
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="./script.js"></script>
 </body>
 </html>

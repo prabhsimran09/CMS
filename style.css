@@ -335,6 +335,22 @@ tr:nth-child(even) { background-color: rgba(0, 0, 255, 0.671);
     color: red;
     border: 1px dashed red ;
 }
+#d1, #d2, #ust{
+    height: 2em;
+    width: 11em;
+    margin: 2px;
+}
+.lab{
+    font-size:medium;
+    
+}
+.asub{
+    width:4em;
+    height:2em;
+    margin-left: 15px;
+    border: 2px dashed crimson ;
+    color: crimson;
+}
 
 
 

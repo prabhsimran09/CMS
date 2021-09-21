@@ -2,6 +2,7 @@ $(".dd").click(function(){
 
  if(!$(".row").hasClass("selected")){
     $(this).parent("tr").addClass("selected");
+ 
  }
 
 });
@@ -24,6 +25,7 @@ $(".ssub").click(function(e){
       document.cookie = "item = "+item ;
 
       var status = self.find("td:eq(4)").find("select").val();
+
       document.cookie = "status = "+status ;
 
       var date = self.find("td:eq(5)").text().trim();
@@ -32,3 +34,12 @@ $(".ssub").click(function(e){
 
 
 });
+
+// $("#go").click(function(){
+
+//    document.getElementById('t1').style.visibility = "visible" ;
+// })
+
+$("#res").click(function(){
+   document.getElementById('t1').style.visibility = "hidden" ;
+})
